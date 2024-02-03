@@ -9,9 +9,10 @@ from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import SMOTE
 from imblearn.over_sampling import ADASYN, BorderlineSMOTE
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.preprocessing import StandardScaler
 
 # Download the dataset
-url = "https://github.com/AnjulaMehto/Sampling_Assignment/raw/main/Creditcard_data.csv"
+
 df = pd.read_csv("Creditcard_data.csv")
 
 # Identify the target variable
@@ -21,8 +22,12 @@ target_variable = df.columns[-1]
 ros = RandomOverSampler(random_state=42)
 X_resampled, y_resampled = ros.fit_resample(df.drop(target_variable, axis=1), df[target_variable])
 
+# Scale the features
+scaler = StandardScaler()
+X_resampled_scaled = scaler.fit_transform(X_resampled)
+
 # Split features and target variable
-X = X_resampled
+X = X_resampled_scaled
 y = y_resampled
 
 # Define TOPSIS function
@@ -37,7 +42,7 @@ def topsis_score(y_true, y_pred):
 models = {
     'RandomForest': RandomForestClassifier(random_state=42),
     'SVM': SVC(probability=True, random_state=42),  # Set probability=True for AUC-ROC
-    'LogisticRegression': LogisticRegression(random_state=42),
+    'LogisticRegression': LogisticRegression(random_state=42, max_iter=1000),
     'KNN': KNeighborsClassifier(),
     'GradientBoosting': GradientBoostingClassifier(random_state=42)
 }
