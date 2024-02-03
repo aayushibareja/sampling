@@ -76,4 +76,8 @@ results_df = pd.DataFrame(results_list)
 # Pivot the DataFrame for tabulating into a table
 table_df = results_df.pivot(index='Model', columns='Sampling Technique', values='TOPSIS Score')
 
-print(f"Table with TOPSIS scores saved to {excel_file_path}")
+# Save the DataFrame to a CSV file named "result.csv"
+csv_file_path = "result.csv"
+table_df.to_csv(csv_file_path)
+
+print(f"Table with TOPSIS scores saved to {csv_file_path}")
